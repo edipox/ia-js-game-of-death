@@ -1,0 +1,62 @@
+.wall{
+  float: left;
+  background-image:url('../img/wall.png');
+}
+.clear-fix{
+  clear:both;
+}
+
+#robot, .robot{
+/*  background-image:url('../img/robot-sprite.png');*/
+  background-image:url('../img/flying-robot.png');
+  background-size: 53px 54px;
+  z-index: 9999;
+  position: absolute;
+  background-repeat: no-repeat;
+}
+
+.wall, .robot{
+  width: 60px;
+  height: 60px;
+  left: 100px;
+}
+
+.current{
+	background: red;
+}
+.dir{
+    height: 200px;
+    width: 200px;
+}
+
+#K{
+  background-image:url('../img/flying-robot.png');
+  background-size: 53px 54px;
+}
+.direction{
+    border: 1px solid gray;
+    float: left;
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+}
+.direction-detected{
+    background: #ef2929;
+}
+.current-direction{
+    border-color: blue;
+}
+/*
+.current-right-direction{
+    background: yellow;
+    border-color: pink;
+}
+.current-back-right-direction{
+    background: green;
+}
+
+.direction-detected.current-right-direction{
+    background: pink;
+}
+
+*/

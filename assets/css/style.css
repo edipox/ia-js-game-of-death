@@ -1,0 +1,32 @@
+.clear-fix{
+  clear:both;
+}
+#explanation, #explanation > div{
+  width: 550px;
+  padding:10px;
+}
+#explanation .column1, #explanation .column2{
+  width: 250px;
+  float: left;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.block{
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+
+.selected{
+  background: #f00;  
+}
+.alive{
+  border: 1px black solid;
+}
+.new{
+  background: #ff4;
+}
+.egg{
+  background: none repeat scroll 0% 0% rgb(235, 200, 100);
+}
