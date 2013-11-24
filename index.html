@@ -12,6 +12,7 @@
 		
 		<!-- /js libs -->
 		<!-- js classes -->
+      <script src="assets/js/classes/genetic.algorithm.js"></script>
 			<script src="assets/js/init.js"></script>
 		<!-- js /classes -->
 
@@ -43,8 +44,10 @@
 		
 		<div>
 			<form>
-				<input type="number" placeholder="Mutation level" />
-				<input type="number" placeholder="World width" id="wwidth" />
+				<input type="number" placeholder="Mutation %" />
+        <input type="number" placeholder="Elitism %" />
+				<input type="number" placeholder="Population size" id="psize" />
+        <input type="number" placeholder="World width" id="wwidth" />
 				<input type="number" placeholder="World height" id="wheight" />
 				<input type="button" value="Restart" id="reset" />
 				<input type="button" value="Test (?)" id="test" />
