@@ -30,7 +30,6 @@ var GA = (function(){
       return fitness;
     }
     self.makeChild = function(c2, mutAmmount, childNumber){
-      for(var i = 0; i < arguments.length; i++) if(_.isNumber(arguments[i]))console.log("arg "+arguments[i])
       var evolvedChromosomes = {};
       var time = true;
       var chromosomes = ga.options.chromosomesToEvolve;
@@ -40,7 +39,6 @@ var GA = (function(){
       });
       if(childNumber <= mutAmmount){
         var mutableChromosome = _.sample(_.keys(chromosomes));
-        console.log(mutableChromosome)
         evolvedChromosomes[mutableChromosome] = ga.options.randomBuilder()[mutableChromosome];
       }
       return new Citizen(ga.options.builder(evolvedChromosomes), ga)
@@ -87,22 +85,32 @@ var GA = (function(){
         Population.build(self.options.firstPopulation, self);
 
     self.getNextPopulation = function(child1Callback, child2Callback, onFinish){
-      console.log(self.population.length)
-      var basePopulation = _.sortBy(self.population, function(c){ return c.fitness() }).slice(0, self.elitism);
-      console.log(basePopulation.length)
-      var newPopulation = [];
-      var params = [];
-      for(var i = 1; i < basePopulation.length; i++){
-        var citizen1 = basePopulation[i-1];
-        var citizen2 = basePopulation[i];
-        console.log("mutation "+self.mutation)
-        var c1Child = citizen1.makeChild(citizen2, self.mutation, i);
-        var c2Child = citizen2.makeChild(citizen1, self.mutation, i);
+
+      var createChildren = function(basePopulation, newPopulation, params, index1, index2, mutation){
+        var citizen1 = basePopulation[index1];
+        var citizen2 = basePopulation[index2];
+        var c1Child = citizen1.makeChild(citizen2, self.mutation, index1);
+        var c2Child = citizen2.makeChild(citizen1, self.mutation, index2);
         newPopulation.push(c1Child);
         newPopulation.push(c2Child);
         params.push({c1: citizen1, c2: citizen2, child: c1Child})
         params.push({c1: citizen1, c2: citizen2, child: c2Child})
       }
+
+      console.log(self.population.length)
+      var basePopulation = _.sortBy(self.population, function(c){ return c.fitness() }).slice(0, self.elitism);
+      console.log(basePopulation.length)
+      var newPopulation = [];
+      var params = [];
+      for(var i = 1; i < basePopulation.length; i++)
+        createChildren(basePopulation, newPopulation, params, i-1, i, self.mutation);
+
+      console.log(newPopulation.length)
+
+      for(var i = 0; i < (basePopulation.length/2); i++)
+        for(var j = parseInt(basePopulation.length/2); j >= 0; j--)
+          createChildren(basePopulation, newPopulation, params, i, j, self.mutation);
+
       if(_.isFunction(onFinish))onFinish(params);
       console.log(newPopulation.length)
       return newPopulation;
