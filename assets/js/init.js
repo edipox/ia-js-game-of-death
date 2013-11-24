@@ -1,11 +1,20 @@
 function wwidth(){
-  return $("#wwidth").val() || 40;
+  return Number($("#wwidth").val()) || 40;
 }
 function wheight(){
-  return $("#wheight").val() || 40;
+  return Number($("#wheight").val()) || 40;
+}
+function mutation(){
+  return Number($("#mutation").val()) || 10;
+}
+function populationSize(){
+  return Number($("#psize").val()) || 10; 
 }
 function selectByPosition(a){
   return $("[data-x='"+a.x+"'][data-y='"+a.y+"']");
+}
+function animationSpeed(){
+  return Number($("#animation").val()) || 500;
 }
 var Row = { new: function(){ return $("<div class='row'></div>") } }
 var Block = { new: function(x, y){ return $("<span class='block' data-x='"+x+"' data-y='"+y+"'></span>") } }
@@ -25,37 +34,37 @@ var World = function(){
     }
 }
 
+function startUp(){
+    window.world = new World();
+    window.ga = new GA({
+      elitismPercent: 50,
+      mutationPercent: mutation(),
+      populationSize: populationSize(),
+      generateFirstGen: true,
+      chromosomesToEvolve: { 
+        x: function(citizen, chromosome, value){
+          return _.random(window.world.width -1);
+        },
+        y: function(citizen, chromosome, value){
+          return _.random(window.world.height -1 );
+        }
+      },
+      builder: function(evolvedChromosomes){
+        return evolvedChromosomes;
+      },
+      randomBuilder: function(){
+        return { x: _.random(window.world.width - 1), y: _.random(window.world.height - 1) }
+      }
+    });
+}
 
 $(document).ready(function(){
-    //$(".block.alive.example").animate
-  window.world = new World();
-  window.ga = new GA({
-    elitismPercent: 90,
-    mutationPercent: 5,
-    populationSize: 240,
-    generateFirstGen: true,
-    chromosomesToEvolve: { 
-      x: function(citizen, chromosome, value){
-        return _.random(39);
-      },
-      y: function(citizen, chromosome, value){
-        return _.random(39);
-      },
-      z: function(){ return _.random(150); }
-    },
-    builder: function(evolvedChromosomes){
-      return evolvedChromosomes;
-    },
-    randomBuilder: function(){
-      return { x: _.random(window.world.width - 1), y: _.random(window.world.height - 1) }
-    }
-  });
 
   $("#reset").on("click",function(){
-    window.world = new World();      
+     startUp();
   });
 
-  var print = function(a,b, child, func2){
+  var print = function(a,b, child){
     var domA = selectByPosition(a);
     var domB = selectByPosition(b);
 
@@ -70,30 +79,50 @@ $(document).ready(function(){
     domA.addClass("selected");
     domB.addClass("selected");
     $(".egg").removeClass("egg");
-    domChild.text(child.z).addClass("egg");
+    domChild.switchClass("", "new").switchClass("new","egg").switchClass("egg", "new");
   }
 
   $("#evolve").on("click", function(){
-    window.ga.evolve(print, print, function(funcs){
-      i = 0,
-      timer = setInterval(callFuncs, 500);
+    $(".alive").removeClass("alive");
+    $(".new").removeClass("new");
+    _.each(window.ga.population, function(c){
+      selectByPosition(c).addClass("alive");
+    });     
+    if(_.isArray(window.timers)) _.each(window.timers, clearInterval);
+    window.ga.evolve(print, print, function(params){
+      var speed = animationSpeed();
+      var i = 0,
+      timer = setInterval(callFuncs, speed);
+
+      window.timers = window.timers || [];
+      window.timers.push(timer);
 
       function callFuncs() {
         var index = i++;
-        if(_.isUndefined(funcs[index])){
-          clearInterval(timer);
-        }else{
-          funcs[index]();
-          if (i === funcs.length) clearInterval(timer);
-        }
+        // if(_.isUndefined(funcs[index])){
+        //   clearInterval(timer);
+        // }else{
+          print(params[index]["c1"], params[index]["c2"], params[index]["child"]);
+          if (i === params.length){
+            clearInterval(timer);
+            $(".alive").removeClass("alive");
+            $(".new").removeClass("new");
+            _.each(window.ga.population, function(c){
+              selectByPosition(c).addClass("alive");
+            });     
+            $(".selecting").removeClass("selecting");
+            $(".selected").removeClass("selected");
+            $(".egg").removeClass("egg");
+          } 
+        // }
       }
     });
   });
 
-  setInterval(function(){ 
-    $(".alive").removeClass("alive")
-    _.each(window.ga.population, function(c){
-      $("[data-x='"+c.x+"'][data-y='"+c.y+"']").addClass("alive");
-    }); 
-  }, 1000)
+  // setInterval(function(){ 
+  //   $(".new").removeClass("new");
+  //   _.each(window.ga.population, function(c){
+  //     selectByPosition(c).addClass("new");
+  //   }); 
+  // }, 1000)
 });

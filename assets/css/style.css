@@ -7,31 +7,40 @@
   float: left;
 }
 
+
 .block{
   width: 10px;
   height: 10px;
   display: inline-block;
-  border: 1px #aaa solid;
+  border: 1px #bbb solid;
 }
 
-.selected{
+.example-selecting, .selecting{
+  border-color: rgba(0, 0, 250, 0.5);
+  -webkit-box-shadow: inset 1px 1px 6px 0px rgba(0, 0, 250, 0.5);
+  box-shadow: inset 1px 1px 6px 0px rgba(0, 0, 250, 0.5);
+}
+.example-selected, .selected{
   background: #f00;  
 }
-.alive{
+.example-alive, .alive, .selected.alive{
   border: 1px black solid;
-
+  -webkit-box-shadow: inset 1px 1px 6px 0px rgba(250, 0, 0, 0.5);
+  box-shadow: inset 1px 1px 6px 0px rgba(250, 0, 0, 0.5);
 }
-.new{
-  background: #ff4;
-}
-.egg{
+.example-new, .new{
+  /*background: #ff4;*/
   background: none repeat scroll 0% 0% rgb(235, 200, 100);
+}
+.example-egg, .egg{
+  /*background: none repeat scroll 0% 0% rgb(235, 200, 100);*/
+  background: #ddff00;
 }
 
 .row{
   display: -webkit-flex;
 }
 
-.selecting{
-  border-color: #933;
+.new.alive{
+  background: none;
 }
