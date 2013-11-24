@@ -29,7 +29,8 @@ var GA = (function(){
       });
       return fitness;
     }
-    self.makeChild = function(c2){
+    self.makeChild = function(c2, mutAmmount, childNumber){
+      for(var i = 0; i < arguments.length; i++) if(_.isNumber(arguments[i]))console.log("arg "+arguments[i])
       var evolvedChromosomes = {};
       var time = true;
       var chromosomes = ga.options.chromosomesToEvolve;
@@ -37,9 +38,11 @@ var GA = (function(){
         evolvedChromosomes[chromosome] = time ? self[chromosome] : c2[chromosome];
         time = !time;
       });
-      window.log = chromosomes;
-      var mutableChromosome = _.sample(_.keys(chromosomes));
-      evolvedChromosomes[mutableChromosome] = ga.options.randomBuilder()[mutableChromosome];
+      if(childNumber <= mutAmmount){
+        var mutableChromosome = _.sample(_.keys(chromosomes));
+        console.log(mutableChromosome)
+        evolvedChromosomes[mutableChromosome] = ga.options.randomBuilder()[mutableChromosome];
+      }
       return new Citizen(ga.options.builder(evolvedChromosomes), ga)
     }
   }  
@@ -73,7 +76,7 @@ var GA = (function(){
     self.options = options;
     var populationSize = self.options.populationSize;
     self.elitism = getNonPercent(self.options.elitismPercent, populationSize);
-    self.mutationPercent = getNonPercent(self.options.mutationPercent, populationSize);
+    self.mutation = getNonPercent(self.options.mutationPercent, populationSize);
 
     function randomCitizen(){
       return new Citizen(self.options.builder(self.options.randomBuilder()), self);
@@ -84,24 +87,24 @@ var GA = (function(){
         Population.build(self.options.firstPopulation, self);
 
     self.getNextPopulation = function(child1Callback, child2Callback, onFinish){
+      console.log(self.population.length)
       var basePopulation = _.sortBy(self.population, function(c){ return c.fitness() }).slice(0, self.elitism);
+      console.log(basePopulation.length)
       var newPopulation = [];
-      var funQueue = [];
+      var params = [];
       for(var i = 1; i < basePopulation.length; i++){
         var citizen1 = basePopulation[i-1];
         var citizen2 = basePopulation[i];
-        var c1Child = citizen1.makeChild(citizen2);
-        var c2Child = citizen2.makeChild(citizen1);
+        console.log("mutation "+self.mutation)
+        var c1Child = citizen1.makeChild(citizen2, self.mutation, i);
+        var c2Child = citizen2.makeChild(citizen1, self.mutation, i);
         newPopulation.push(c1Child);
         newPopulation.push(c2Child);
-        funQueue.push(function(){
-          if(_.isFunction(child1Callback))child1Callback(citizen1, citizen2, c1Child);
-        });
-        funQueue.push(function(){
-          if(_.isFunction(child2Callback))child2Callback(citizen1, citizen2, c2Child);
-        });
+        params.push({c1: citizen1, c2: citizen2, child: c1Child})
+        params.push({c1: citizen1, c2: citizen2, child: c2Child})
       }
-      if(_.isFunction(onFinish))onFinish(funQueue);
+      if(_.isFunction(onFinish))onFinish(params);
+      console.log(newPopulation.length)
       return newPopulation;
     }
 

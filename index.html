@@ -7,7 +7,7 @@
 		<!-- js libs -->
 			<script src="assets/js/lib/jquery-1.9.1.js"></script>
 			<script src="assets/js/lib/underscore-min.js"></script>
-	<!--		<script src="assets/js/lib/jquery.spritely.js"></script> -->
+	     <script src="assets/js/lib/jquery-ui.custom.min.js"></script>
 
 		
 		<!-- /js libs -->
@@ -24,18 +24,18 @@
     	<div>
     		<span class="column1">
 	    		<div>
-	    			<label>Selected</label> <span class="block selected"></span>
+	    			<label>Selected</label> <span class="block example-selected"></span>
     			</div>
     			<div>
-	    			<label>Alive (with border)</label> <span class="block alive example"></span>
+	    			<label>Alive (with border)</label> <span class="block example-alive "></span>
     			</div>
     		</span>
     		<span class="column2">
     			<div>
-	    			<label>New</label> <span class="block new"></span>
+	    			<label>New</label> <span class="block example-new"></span>
     			</div>
     			<div>
-	    			<label>Egg</label> <span class="block egg"></span>
+	    			<label>Egg</label> <span class="block example-egg"></span>
     			</div>
     		</span>
     	</div>
@@ -44,9 +44,10 @@
 		
 		<div>
 			<form>
-				<input type="number" placeholder="Mutation %" />
-        <input type="number" placeholder="Elitism %" />
+				<input type="number" placeholder="Mutation %" id="mutation" />
+        <!-- <input type="number" placeholder="Elitism %" /> -->
 				<input type="number" placeholder="Population size" id="psize" />
+        <input type="number" placeholder="Animation speed" id="animation" />
         <input type="number" placeholder="World width" id="wwidth" />
 				<input type="number" placeholder="World height" id="wheight" />
 				<input type="button" value="Restart" id="reset" />
