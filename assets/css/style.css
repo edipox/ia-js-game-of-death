@@ -31,3 +31,7 @@
 .row{
   display: -webkit-flex;
 }
+
+.selecting{
+  border-color: #933;
+}
