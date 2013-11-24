@@ -2,20 +2,16 @@
   clear:both;
 }
 #explanation, #explanation > div{
-  width: 550px;
-  padding:10px;
-}
-#explanation .column1, #explanation .column2{
   width: 250px;
+  padding:10px;
   float: left;
-  margin-top: 5px;
-  margin-bottom: 5px;
 }
 
 .block{
   width: 10px;
   height: 10px;
   display: inline-block;
+  border: 1px #aaa solid;
 }
 
 .selected{
@@ -23,10 +19,15 @@
 }
 .alive{
   border: 1px black solid;
+
 }
 .new{
   background: #ff4;
 }
 .egg{
   background: none repeat scroll 0% 0% rgb(235, 200, 100);
+}
+
+.row{
+  display: -webkit-flex;
 }

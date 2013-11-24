@@ -12,19 +12,11 @@
 		
 		<!-- /js libs -->
 		<!-- js classes -->
-			<!-- <script src="assets/js/classes/ulu.js"></script> -->
+			<script src="assets/js/init.js"></script>
 		<!-- js /classes -->
 
 	</head>
 	<body>
-		
-		<div>
-			<form>
-				<input type="number" placeholder="Mutation level" />
-				<input type="button" value="Restart" />
-				<input type="button" value="Test (?)" />
-			</form>
-		</div>
     
     <div id="explanation">
     	<label>Explanation</label>
@@ -47,6 +39,20 @@
     		</span>
     	</div>
     </div>
+
+		
+		<div>
+			<form>
+				<input type="number" placeholder="Mutation level" />
+				<input type="number" placeholder="World width" id="wwidth" />
+				<input type="number" placeholder="World height" id="wheight" />
+				<input type="button" value="Restart" id="reset" />
+				<input type="button" value="Test (?)" id="test" />
+			</form>
+		</div>
+
+    <div class="clear-fix"></div>
+    <div id="world"></div>
 
 	</body>
 </html>
