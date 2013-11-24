@@ -1,20 +1,20 @@
 function wwidth(){
-  return Number($("#wwidth").val()) || 40;
+  return parseInt($("#wwidth").val()) || 40;
 }
 function wheight(){
-  return Number($("#wheight").val()) || 40;
+  return parseInt($("#wheight").val()) || 40;
 }
 function mutation(){
-  return Number($("#mutation").val()) || 10;
+  return parseInt($("#mutation").val()) || 10;
 }
 function populationSize(){
-  return Number($("#psize").val()) || 10; 
+  return parseInt($("#psize").val()) || 5; 
 }
 function selectByPosition(a){
   return $("[data-x='"+a.x+"'][data-y='"+a.y+"']");
 }
 function animationSpeed(){
-  return Number($("#animation").val()) || 500;
+  return parseInt($("#animation").val()) || 500;
 }
 var Row = { new: function(){ return $("<div class='row'></div>") } }
 var Block = { new: function(x, y){ return $("<span class='block' data-x='"+x+"' data-y='"+y+"'></span>") } }

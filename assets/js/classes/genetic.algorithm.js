@@ -1,10 +1,11 @@
 var GA = (function(){
   function getNonPercent(val, populationSize){
-    return val*populationSize/100;
+    return parseInt(val*populationSize/100);
   }
 
   var Population = {
     new: function(size, randomCitizen){
+      console.log("Population new size "+size)
       var citizens = [];
       for(var i = 0; i < size; i++)
         citizens.push( randomCitizen() );
@@ -73,7 +74,9 @@ var GA = (function(){
 
     self.options = options;
     var populationSize = self.options.populationSize;
-    self.elitism = getNonPercent(self.options.elitismPercent, populationSize);
+    self.elitism = function(){ 
+      return getNonPercent(self.options.elitismPercent, self.population.length || populationSize); 
+    }
     self.mutation = getNonPercent(self.options.mutationPercent, populationSize);
 
     function randomCitizen(){
@@ -97,22 +100,21 @@ var GA = (function(){
         params.push({c1: citizen1, c2: citizen2, child: c2Child})
       }
 
-      console.log(self.population.length)
-      var basePopulation = _.sortBy(self.population, function(c){ return c.fitness() }).slice(0, self.elitism);
-      console.log(basePopulation.length)
+      var basePopulation = _.sortBy(self.population, function(c){ return c.fitness() });
       var newPopulation = [];
       var params = [];
-      for(var i = 1; i < basePopulation.length; i++)
+      var size = basePopulation.length - self.elitism();
+      console.log("basePopulation.length "+basePopulation.length)
+      console.log("self.elitism() "+self.elitism())
+      console.log("size "+size)
+      for(var i = 1; i <= size; i++)
         createChildren(basePopulation, newPopulation, params, i-1, i, self.mutation);
-
-      console.log(newPopulation.length)
-
-      for(var i = 0; i < (basePopulation.length/2); i++)
-        for(var j = parseInt(basePopulation.length/2); j >= 0; j--)
-          createChildren(basePopulation, newPopulation, params, i, j, self.mutation);
-
+/*
+      var j = basePopulation.length;
+      for(var i = 0; i < size; i++)
+        createChildren(basePopulation, newPopulation, params, i, j-i-1, self.mutation);
+*/
       if(_.isFunction(onFinish))onFinish(params);
-      console.log(newPopulation.length)
       return newPopulation;
     }
 
