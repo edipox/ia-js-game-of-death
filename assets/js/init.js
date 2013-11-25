@@ -16,7 +16,7 @@ function selectByPosition(a){
 }
 function animationSpeed(){
   var speed = parseInt($("#animation").val());
-  return  _.isNaN(speed)  ?  500 : speed;
+  return  _.isNaN(speed)  ?  0 : speed;
 }
 function polution(){
   var polution = parseInt($("#polution").val());
