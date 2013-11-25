@@ -44,3 +44,28 @@
 .new.alive{
   background: none;
 }
+
+
+.soft-warning{
+  background: none repeat scroll 0% 0% #8CE3FF;
+}
+
+.warning{
+  background: none repeat scroll 0% 0% #00FFF7;
+}
+
+.take-care{
+  background: none repeat scroll 0% 0% #22F878;
+}
+
+.danger{
+  background: none repeat scroll 0% 0% #008BFF;
+}
+
+.almost-dead{
+  background: none repeat scroll 0% 0% #0D2ACB;
+}
+
+.dead{
+  background: none repeat scroll 0% 0% #0D0869;
+}

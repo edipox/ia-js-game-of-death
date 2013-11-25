@@ -5,7 +5,6 @@ var GA = (function(){
 
   var Population = {
     new: function(size, randomCitizen){
-      console.log("Population new size "+size)
       var citizens = [];
       for(var i = 0; i < size; i++)
         citizens.push( randomCitizen() );
@@ -30,7 +29,7 @@ var GA = (function(){
       });
       return fitness;
     }
-    self.makeChild = function(c2, mutAmmount, childNumber){
+    self.makeChild = function(c2){
       var evolvedChromosomes = {};
       var time = true;
       var chromosomes = ga.options.chromosomesToEvolve;
@@ -38,11 +37,13 @@ var GA = (function(){
         evolvedChromosomes[chromosome] = time ? self[chromosome] : c2[chromosome];
         time = !time;
       });
-      if(childNumber <= mutAmmount){
-        var mutableChromosome = _.sample(_.keys(chromosomes));
-        evolvedChromosomes[mutableChromosome] = ga.options.randomBuilder()[mutableChromosome];
-      }
       return new Citizen(ga.options.builder(evolvedChromosomes), ga)
+    },
+    self.makeMut = function(c2){
+      var c = self.makeChild(c2);
+      var mutableChromosome = _.sample(_.keys(ga.options.chromosomesToEvolve));
+      c[mutableChromosome] = ga.options.randomBuilder()[mutableChromosome];
+      return c;
     }
   }  
 
@@ -66,7 +67,7 @@ var GA = (function(){
             }
            },
 *     builder: function that returns a new citizen given an object with evolved chromosomes.    
-*     randomBuilder: function that return a new citizen to generate the first popultation
+*     randomBuilder: function that return a new citizen to generate the first population
 *       in case that the first population was'nt given.
 */
   var GA = function (options) {
@@ -77,7 +78,9 @@ var GA = (function(){
     self.elitism = function(){ 
       return getNonPercent(self.options.elitismPercent, self.population.length || populationSize); 
     }
-    self.mutation = getNonPercent(self.options.mutationPercent, populationSize);
+    self.mutation = function(){
+      return getNonPercent(self.options.mutationPercent, self.population.length || populationSize);
+    }
 
     function randomCitizen(){
       return new Citizen(self.options.builder(self.options.randomBuilder()), self);
@@ -89,11 +92,11 @@ var GA = (function(){
 
     self.getNextPopulation = function(child1Callback, child2Callback, onFinish){
 
-      var createChildren = function(basePopulation, newPopulation, params, index1, index2, mutation){
+      var createChildren = function(basePopulation, newPopulation, params, index1, index2, isMut){
         var citizen1 = basePopulation[index1];
         var citizen2 = basePopulation[index2];
-        var c1Child = citizen1.makeChild(citizen2, self.mutation, index1);
-        var c2Child = citizen2.makeChild(citizen1, self.mutation, index2);
+        var c1Child = isMut ? citizen1.makeMut(citizen2) : citizen1.makeChild(citizen2);
+        var c2Child = isMut ? citizen2.makeMut(citizen1) : citizen2.makeChild(citizen1);
         newPopulation.push(c1Child);
         newPopulation.push(c2Child);
         params.push({c1: citizen1, c2: citizen2, child: c1Child})
@@ -101,20 +104,28 @@ var GA = (function(){
       }
 
       var basePopulation = _.sortBy(self.population, function(c){ return c.fitness() });
-      var newPopulation = [];
+      
+      var newPopulation = basePopulation.slice(0, self.elitism());
+
       var params = [];
-      var size = basePopulation.length - self.elitism();
-      console.log("basePopulation.length "+basePopulation.length)
-      console.log("self.elitism() "+self.elitism())
-      console.log("size "+size)
-      for(var i = 1; i <= size; i++)
-        createChildren(basePopulation, newPopulation, params, i-1, i, self.mutation);
-/*
+
       var j = basePopulation.length;
-      for(var i = 0; i < size; i++)
-        createChildren(basePopulation, newPopulation, params, i, j-i-1, self.mutation);
-*/
-      if(_.isFunction(onFinish))onFinish(params);
+      for(var i = 0; i < basePopulation.length; i++)
+        createChildren(basePopulation, newPopulation, params, i, j-i-1);
+
+      newPopulation = _.sortBy(newPopulation, function(c){ return c.fitness() })
+        .slice(0, self.population.length );
+
+      for(var i = 0; i < self.mutation(); i++)
+        createChildren(basePopulation, newPopulation, params, i, _.random(self.mutation()), true);
+
+      var mut = self.mutation();
+      if(mut > 0)
+        newPopulation = _.difference(newPopulation, newPopulation.slice(mut,mut*3));
+
+      if(_.isFunction(onFinish))
+        onFinish(params);
+
       return newPopulation;
     }
 

@@ -37,6 +37,15 @@
     			<div>
 	    			<label>Egg</label> <span class="block example-egg"></span>
     			</div>
+          <div>
+            <label>Population size</label> <span id="pop"></span>
+          </div>          
+          <div>
+            <label>Best fitness</label> <span id="bfitness"></span>
+          </div>                    
+          <div>
+            <label>Worst fitness</label> <span id="wfitness"></span>
+          </div>                    
     		</span>
     	</div>
     </div>
@@ -45,11 +54,14 @@
 		<div>
 			<form>
 				<input type="number" placeholder="Mutation %" id="mutation" />
-        <input type="number" placeholder="Elitism %" />
-				<input type="number" placeholder="Population size" id="psize" />
+        <input type="number" placeholder="Elitism %" id="elitism" />
+        <input type="number" placeholder="Population size" id="psize" />
+        <br/>
         <input type="number" placeholder="Animation speed" id="animation" />
         <input type="number" placeholder="World width" id="wwidth" />
-				<input type="number" placeholder="World height" id="wheight" />
+        <input type="number" placeholder="World height" id="wheight" />
+        <br/>
+        <input type="number" placeholder="Polution level" id="polution" />
 				<input type="button" value="Restart" id="reset" />
 				<input type="button" value="Evolve (?)" id="evolve" />
 			</form>
