@@ -5,7 +5,8 @@ function wheight(){
   return parseInt($("#wheight").val()) || 40;
 }
 function mutation(){
-  return parseInt($("#mutation").val()) || 10;
+  var mutation = parseInt($("#mutation").val());
+  return _.isNaN(mutation)  ?  5 : mutation;  
 }
 function populationSize(){
   return parseInt($("#psize").val()) || 5; 
@@ -14,8 +15,36 @@ function selectByPosition(a){
   return $("[data-x='"+a.x+"'][data-y='"+a.y+"']");
 }
 function animationSpeed(){
-  return parseInt($("#animation").val()) || 500;
+  var speed = parseInt($("#animation").val());
+  return  _.isNaN(speed)  ?  500 : speed;
 }
+function polution(){
+  var polution = parseInt($("#polution").val());
+  return _.isNaN(polution)  ?  10 : polution;
+}
+
+function elitism(){
+  var elitism = parseInt($("#elitism").val());
+  return _.isNaN(elitism)  ?  20 : elitism; 
+}
+
+function showAlives(){
+  $(".alive").removeClass("alive");
+  $(".new").removeClass("new");
+  $(".selecting").removeClass("selecting");
+  $(".selected").removeClass("selected");
+  $(".egg").removeClass("egg");
+  var pop = window.ga.population;
+  _.each(pop, function(c){
+    selectByPosition(c).addClass("alive");
+  });     
+  if(_.isArray(pop)){
+    $("#bfitness").text(pop[0].fitness());
+    $("#wfitness").text(pop[pop.length-1].fitness())
+    $("#pop").text(pop.length)
+  }
+}
+
 var Row = { new: function(){ return $("<div class='row'></div>") } }
 var Block = { new: function(x, y){ return $("<span class='block' data-x='"+x+"' data-y='"+y+"'></span>") } }
 
@@ -34,19 +63,62 @@ var World = function(){
     }
 }
 
+function dotClass(x, y, range, klass){
+  positions = [];
+  for(var i = y-range; i <= y+range+1; i++)
+    for(var j = x-range; j <= x+range+1; j++)
+          positions.push("[data-x='"+j+"'][data-y='"+i+"']")
+  $(positions.join(",")).addClass(klass);
+}
+function dangerDot(x, y, inc){
+  var range = 0;
+  var classes = window.dangerClasses;
+  for(var i = 0; i < classes.length; i++){
+    dotClass(x, y, range, classes[i]);
+    range+=inc;
+  }
+}
+
+function dangerRange(property){
+  var max = 1000;
+  var total = 0; 
+  var classes = window.dangerClasses;
+  for(var i = 1; i <= classes.length; i++){
+    var klass =  classes[classes.length-i];
+    total += $("."+klass+property).length*i;  
+  }
+  return total;
+}
+
 function startUp(){
     window.world = new World();
+    window.dangerClasses = ["dead", "almost-dead", "danger", "take-care", "warning", "soft-warning"];
+    var height = window.world.height;
+    var width = window.world.width;
+    var pol = polution();
+    if(pol > 0){
+      for(var i = 0; i < 3; i++){
+      dangerDot(
+        _.random(width),
+        _.random(height),
+        parseInt(_.random(height < width ? height : width)*pol/100) );
+      }
+    } 
+
+
     window.ga = new GA({
-      elitismPercent: 50,
+      elitismPercent: elitism(),
       mutationPercent: mutation(),
       populationSize: populationSize(),
       generateFirstGen: true,
       chromosomesToEvolve: { 
         x: function(citizen, chromosome, value){
-          return _.random(window.world.width -1);
+          return dangerRange("[data-x='"+citizen.x+"']") 
+          + $(".alive[data-x='"+citizen.x+"'][data-y='"+citizen.y+"']").length*10 - 10;
         },
         y: function(citizen, chromosome, value){
-          return _.random(window.world.height -1 );
+          return dangerRange("[data-y='"+citizen.y+"']") 
+          + $(".alive[data-x='"+citizen.x+"'][data-y='"+citizen.y+"']").length*10 - 10;
         }
       },
       builder: function(evolvedChromosomes){
@@ -56,13 +128,17 @@ function startUp(){
         return { x: _.random(window.world.width - 1), y: _.random(window.world.height - 1) }
       }
     });
+
 }
 
 $(document).ready(function(){
 
   $("#reset").on("click",function(){
      startUp();
+     showAlives()
   });
+  $("#reset").click();
+
 
   var print = function(a,b, child){
     var domA = selectByPosition(a);
@@ -79,16 +155,15 @@ $(document).ready(function(){
     domA.addClass("selected");
     domB.addClass("selected");
     $(".egg").removeClass("egg");
-    domChild.switchClass("", "new").switchClass("new","egg").switchClass("egg", "new");
+    var speed = animationSpeed();
+    domChild.switchClass("", "new", speed).switchClass("new","egg", speed).switchClass("egg", "new", speed);
   }
 
   $("#evolve").on("click", function(){
-    $(".alive").removeClass("alive");
-    $(".new").removeClass("new");
-    _.each(window.ga.population, function(c){
-      selectByPosition(c).addClass("alive");
-    });     
-    if(_.isArray(window.timers)) _.each(window.timers, clearInterval);
+    showAlives()
+ 
+    if(_.isArray(window.timers)) 
+      _.each(window.timers, clearInterval);
     window.ga.evolve(print, print, function(params){
       var speed = animationSpeed();
       var i = 0,
@@ -99,30 +174,13 @@ $(document).ready(function(){
 
       function callFuncs() {
         var index = i++;
-        // if(_.isUndefined(funcs[index])){
-        //   clearInterval(timer);
-        // }else{
           print(params[index]["c1"], params[index]["c2"], params[index]["child"]);
           if (i === params.length){
             clearInterval(timer);
-            $(".alive").removeClass("alive");
-            $(".new").removeClass("new");
-            _.each(window.ga.population, function(c){
-              selectByPosition(c).addClass("alive");
-            });     
-            $(".selecting").removeClass("selecting");
-            $(".selected").removeClass("selected");
-            $(".egg").removeClass("egg");
+            showAlives();
           } 
-        // }
       }
     });
   });
 
-  // setInterval(function(){ 
-  //   $(".new").removeClass("new");
-  //   _.each(window.ga.population, function(c){
-  //     selectByPosition(c).addClass("new");
-  //   }); 
-  // }, 1000)
 });
