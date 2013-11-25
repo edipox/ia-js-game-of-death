@@ -4,10 +4,13 @@
 		<meta charset="utf-8">
 		<title>The game of dead - Edipo Vinicius da Silva</title>
 			<link href="assets/css/style.css" rel="stylesheet">
+            <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+            <link href="assets/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- js libs -->
 			<script src="assets/js/lib/jquery-1.9.1.js"></script>
 			<script src="assets/js/lib/underscore-min.js"></script>
-	     <script src="assets/js/lib/jquery-ui.custom.min.js"></script>
+	        <script src="assets/js/lib/jquery-ui.custom.min.js"></script>
+            <script src="assets/js/lib/bootstrap.min.js"></script>
 
 		
 		<!-- /js libs -->
@@ -17,57 +20,84 @@
 		<!-- js /classes -->
 
 	</head>
-	<body>
-    
-    <div id="explanation">
-    	<label>Explanation</label>
-    	<div>
-    		<span class="column1">
-	    		<div>
+	<body style="padding-left:25px">
+    <div class="page-header">
+      <h1>Game of Death </h1>
+      <h5><small>by Edipo Vinicius da Silva</small></h5>
+    </div>
+
+    <form class="navbar-form navbar-left form-inline" >
+        <div class="form-group">
+            <label class="sr-only" for="mutation">Mutation</label>
+            <input class="form-control" name="mutation" type="number" placeholder="Mutation %. Eg: 5" id="mutation" />
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="elitism">Elitism</label>
+            <input  class="form-control" name="elitism" type="number" placeholder="Elitism %. Eg: 20" id="elitism" />
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="psize">Pop Size</label>
+            <input class="form-control" name="psize"  type="number" placeholder="Population size. Eg: 10" id="psize" />
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="speed">Animation speed</label>
+            <input  class="form-control" name="speed" type="number" placeholder="Animation speed. Eg: 500" id="animation" />
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="wwidth">World width</label>
+            <input class="form-control" name="wwidth" type="number" placeholder="World width. Eg: 40" id="wwidth" />
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="wheight">World height</label>
+            <input  class="form-control" name="wheight" type="number" placeholder="World height. Eg: 40" id="wheight" />
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="polevel">Polution level</label>
+            <input  class="form-control" type="number" name="polevel" placeholder="Polution level. Eg: 10" id="polution" />
+        </div>
+
+        <div class="btn-group">
+            <input type="button" class="btn btn-default navbar-btn" value="Restart" id="reset" />
+            <input type="button" class="btn btn-default navbar-btn" value="Evolve" id="evolve" />
+        </div>
+    </form>
+
+    <div id="explanation" class="panel panel-default">
+        <div class="panel-heading">Explanation</div>
+        <div class="panelbody">
+            <div class="list-group">
+	    		<div class="list-group-item">
 	    			<label>Selected</label> <span class="block example-selected"></span>
     			</div>
-    			<div>
+    			<div class="list-group-item">
 	    			<label>Alive (with border)</label> <span class="block example-alive "></span>
     			</div>
-    		</span>
-    		<span class="column2">
-    			<div>
-	    			<label>New</label> <span class="block example-new"></span>
-    			</div>
-    			<div>
-	    			<label>Egg</label> <span class="block example-egg"></span>
-    			</div>
-          <div>
-            <label>Population size</label> <span id="pop"></span>
-          </div>          
-          <div>
-            <label>Best fitness</label> <span id="bfitness"></span>
-          </div>                    
-          <div>
-            <label>Worst fitness</label> <span id="wfitness"></span>
-          </div>                    
-    		</span>
+                <div class="list-group-item">
+                    <label>New</label> <span class="block example-new"></span>
+                </div>
+                <div class="list-group-item">
+                    <label>Egg</label> <span class="block example-egg"></span>
+                </div>
+                <div class="list-group-item">
+                    <label>Best fitness</label> <span id="bfitness"></span>
+                </div>                    
+                <div class="list-group-item">
+                    <label>Worst fitness</label> <span id="wfitness"></span>
+                </div>                    
+                <div class="list-group-item">
+                    <label>Population size</label> <span id="pop"></span>
+                </div>          
+                <div class="list-group-item">
+                    <label>Elitists</label> <span id="elitists"></span>
+                </div>                    
+                <div class="list-group-item">
+                    <label>Muts</label> <span id="muts"></span>
+                </div>                    
+            </div>
     	</div>
     </div>
 
-		
-		<div>
-			<form>
-				<input type="number" placeholder="Mutation %" id="mutation" />
-        <input type="number" placeholder="Elitism %" id="elitism" />
-        <input type="number" placeholder="Population size" id="psize" />
-        <br/>
-        <input type="number" placeholder="Animation speed" id="animation" />
-        <input type="number" placeholder="World width" id="wwidth" />
-        <input type="number" placeholder="World height" id="wheight" />
-        <br/>
-        <input type="number" placeholder="Polution level" id="polution" />
-				<input type="button" value="Restart" id="reset" />
-				<input type="button" value="Evolve (?)" id="evolve" />
-			</form>
-		</div>
-
-    <div class="clear-fix"></div>
+    <!-- <div class="clear-fix"></div> -->
     <div id="world"></div>
 
 	</body>
