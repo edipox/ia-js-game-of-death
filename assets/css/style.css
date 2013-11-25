@@ -1,13 +1,10 @@
 .clear-fix{
   clear:both;
 }
-#explanation, #explanation > div{
-  width: 250px;
-  padding:10px;
+#explanation{
+  width: 200px;
   float: left;
 }
-
-
 .block{
   width: 10px;
   height: 10px;
@@ -21,7 +18,7 @@
   box-shadow: inset 1px 1px 6px 0px rgba(0, 0, 250, 0.5);
 }
 .example-selected, .selected{
-  background: #f00;  
+  background: #f00!important;  
 }
 .example-alive, .alive, .selected.alive{
   border: 1px black solid;
@@ -68,4 +65,9 @@
 
 .dead{
   background: none repeat scroll 0% 0% #0D0869;
+}
+
+#world{
+  float: left;
+  margin-left: 40px;
 }

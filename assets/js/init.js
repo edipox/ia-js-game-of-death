@@ -9,14 +9,14 @@ function mutation(){
   return _.isNaN(mutation)  ?  5 : mutation;  
 }
 function populationSize(){
-  return parseInt($("#psize").val()) || 5; 
+  return parseInt($("#psize").val()) || 10; 
 }
 function selectByPosition(a){
   return $("[data-x='"+a.x+"'][data-y='"+a.y+"']");
 }
 function animationSpeed(){
   var speed = parseInt($("#animation").val());
-  return  _.isNaN(speed)  ?  0 : speed;
+  return  _.isNaN(speed)  ?  1000 : speed;
 }
 function polution(){
   var polution = parseInt($("#polution").val());
@@ -29,19 +29,24 @@ function elitism(){
 }
 
 function showAlives(){
-  $(".alive").removeClass("alive");
-  $(".new").removeClass("new");
-  $(".selecting").removeClass("selecting");
-  $(".selected").removeClass("selected");
-  $(".egg").removeClass("egg");
+  if(_.isArray(window.timers)) 
+        _.each(window.timers, clearInterval); 
+
+  $(".alive, .new, .selecting, .selected, .egg")
+    .removeClass("alive").removeClass("new").removeClass("egg")
+    .removeClass("selecting").removeClass("selected");
+
   var pop = window.ga.population;
   _.each(pop, function(c){
     selectByPosition(c).addClass("alive");
   });     
+  
   if(_.isArray(pop)){
     $("#bfitness").text(pop[0].fitness());
     $("#wfitness").text(pop[pop.length-1].fitness())
     $("#pop").text(pop.length)
+    $("#elitists").text(window.ga.elitism())
+    $("#muts").text(window.ga.mutation())
   }
 }
 
@@ -80,7 +85,6 @@ function dangerDot(x, y, inc){
 }
 
 function dangerRange(property){
-  var max = 1000;
   var total = 0; 
   var classes = window.dangerClasses;
   for(var i = 1; i <= classes.length; i++){
