@@ -1,3 +1,6 @@
+body{
+  padding-left:25px
+}
 .clear-fix{
   clear:both;
 }
@@ -70,4 +73,8 @@
 #world{
   float: left;
   margin-left: 40px;
+}
+
+.form-group.animation, .form-group.psize{
+  width: 220px;
 }

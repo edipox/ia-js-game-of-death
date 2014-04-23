@@ -1,5 +1,5 @@
 function wwidth(){
-  return parseInt($("#wwidth").val()) || 40;
+  return parseInt($("#wwidth").val()) || 85;
 }
 function wheight(){
   return parseInt($("#wheight").val()) || 40;
@@ -66,6 +66,35 @@ var World = function(){
       } 
       this.DOM.append(row);
     }
+
+    this.update = function(){
+      var w = wwidth();
+      var h = wheight();
+
+      for(var i = this.width; i > w ; i--)
+        $(".block[data-x='"+i+"']").remove();
+
+      for(var i = this.height; i > h ; i--)
+        $(".block[data-y='"+i+"']").remove();
+
+      for(var j = this.height; j < h; ++j){
+        row = Row.new();
+        for(var i = 0; i < w; ++i){
+          row.append(Block.new(i,j));
+        } 
+        this.DOM.append(row);
+      }
+
+      if(this.width < w){
+        $(".row").each( function(j, row){
+          for(var i = this.width; i < w; ++i)
+            $(row).append(Block.new(i,j));
+        });
+      }
+      
+      this.width = w;
+      this.height = h;
+    }
 }
 
 function dotClass(x, y, range, klass){
@@ -94,21 +123,7 @@ function dangerRange(property){
   return total;
 }
 
-function startUp(){
-    window.world = new World();
-    window.dangerClasses = ["dead", "almost-dead", "danger", "take-care", "warning", "soft-warning"];
-    var height = window.world.height;
-    var width = window.world.width;
-    var pol = polution();
-    if(pol > 0){
-      for(var i = 0; i < 3; i++){
-      dangerDot(
-        _.random(width),
-        _.random(height),
-        parseInt(_.random(height < width ? height : width)*pol/100) );
-      }
-    } 
-
+function setGA(){
 
     window.ga = new GA({
       elitismPercent: elitism(),
@@ -133,6 +148,27 @@ function startUp(){
       }
     });
 
+
+}
+
+function startUp(){
+    window.world = new World();
+    window.dangerClasses = ["dead", "almost-dead", "danger", "take-care", "warning", "soft-warning"];
+    var height = window.world.height;
+    var width = window.world.width;
+    var pol = polution();
+    if(pol > 0){
+      for(var i = 0; i < 3; i++){
+      dangerDot(
+        _.random(width),
+        _.random(height),
+        parseInt(_.random(height < width ? height : width)*pol/100) );
+      }
+    } 
+
+    setGA();
+
+
 }
 
 $(document).ready(function(){
@@ -143,6 +179,21 @@ $(document).ready(function(){
   });
   $("#reset").click();
 
+
+  $("#update").on("click", function(){
+    if(window.world.width != wwidth() || window.world.height != wheight() ){
+        window.world.update();
+        setGA();
+        showAlives();
+    }else{
+      _.extend(window.ga.options, {
+        elitismPercent: elitism(),
+        mutationPercent: mutation(),
+        populationSize: populationSize()
+      });
+    }
+
+  });
 
   var print = function(a,b, child){
     var domA = selectByPosition(a);

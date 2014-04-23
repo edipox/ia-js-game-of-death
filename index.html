@@ -20,7 +20,7 @@
 		<!-- js /classes -->
 
 	</head>
-	<body style="padding-left:25px">
+	<body >
     <div class="page-header">
       <h1>Game of Death </h1>
       <h5><small>by Edipo Vinicius da Silva</small></h5>
@@ -35,17 +35,17 @@
             <label class="sr-only" for="elitism">Elitism</label>
             <input  class="form-control" name="elitism" type="number" placeholder="Elitism %. Eg: 20" id="elitism" />
         </div>
-        <div class="form-group">
+        <div class="form-group psize">
             <label class="sr-only" for="psize">Pop Size</label>
             <input class="form-control" name="psize"  type="number" placeholder="Population size. Eg: 10" id="psize" />
         </div>
-        <div class="form-group">
-            <label class="sr-only" for="speed">Animation speed</label>
-            <input  class="form-control" name="speed" type="number" placeholder="Animation speed. Eg: 500" id="animation" />
+        <div class="form-group animation">
+            <label class="sr-only" for="speed">Animation step time</label>
+            <input  class="form-control" name="speed" type="number" placeholder="Animation step time. Eg: 500" id="animation" />
         </div>
         <div class="form-group">
             <label class="sr-only" for="wwidth">World width</label>
-            <input class="form-control" name="wwidth" type="number" placeholder="World width. Eg: 40" id="wwidth" />
+            <input class="form-control" name="wwidth" type="number" placeholder="World width. Eg: 85" id="wwidth" />
         </div>
         <div class="form-group">
             <label class="sr-only" for="wheight">World height</label>
@@ -58,6 +58,7 @@
 
         <div class="btn-group">
             <input type="button" class="btn btn-default navbar-btn" value="Restart" id="reset" />
+            <input type="button" class="btn btn-default navbar-btn" value="Update" id="update" />
             <input type="button" class="btn btn-default navbar-btn" value="Evolve" id="evolve" />
         </div>
     </form>
