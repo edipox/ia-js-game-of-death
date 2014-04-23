@@ -1,5 +1,5 @@
 function wwidth(){
-  return parseInt($("#wwidth").val()) || 40;
+  return parseInt($("#wwidth").val()) || 80;
 }
 function wheight(){
   return parseInt($("#wheight").val()) || 40;

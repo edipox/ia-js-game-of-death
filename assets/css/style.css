@@ -71,3 +71,7 @@
   float: left;
   margin-left: 40px;
 }
+
+.speed.form-group{
+  width: 220px;
+}
