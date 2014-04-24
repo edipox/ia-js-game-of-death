@@ -23,3 +23,6 @@ The idea of the game is that in each new generation the citizens should be furth
 - World width: Number of blocks within a row in the *world*.
 - World height: Number of rows in a *world*.
 - Polution level: Number related to the size of each *dot* of polution.
+
+
+This was made as a task in the subject of Artificial Intelligence of the Informatic Engineering career at Universidad Nacional de Itapua.
