@@ -1,6 +1,6 @@
 # Game of Death
 
-It is a simple javascript application meant for showing graphically how a genetic algorithm works. The idea is that you could learn playing with the [options](#options). 
+A simple javascript application meant for showing graphically how a genetic algorithm works. The idea is that you could learn playing with the [options](#options). 
 
 ![overview](/assets/img/overview.png)
 
